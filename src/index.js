@@ -19,6 +19,9 @@ async function play() {
     }
     checkGuessNumber(input, randomNumber, inputValue);
     if (input === randomNumber) {
+      console.log(
+        `축하합니다! ${inputValue.length}번 만에 숫자를 맞추셨습니다.`
+      );
       break;
     }
   }
