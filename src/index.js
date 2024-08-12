@@ -18,6 +18,16 @@ export async function askToPlayAgain() {
   }
 }
 
+async function getUserInput() {
+  let input = await readLineAsync('숫자를 입력하세요: ');
+  input = parseInt(input, 10);
+  if (isNaN(input) || input < MIN_NUMBER || input > MAX_NUMBER) {
+    console.log(`${MIN_NUMBER}~${MAX_NUMBER} 사이의 숫자를 입력하세요.`);
+    return getUserInput();
+  }
+  return input;
+}
+
 async function play() {
   const randomNumber = generateRandomNumber();
   console.log(randomNumber);
@@ -27,16 +37,10 @@ async function play() {
   const inputValue = [];
   let count;
   for (count = 1; count <= MAX_ATTEMPT; count++) {
-    let input = await readLineAsync('숫자를 입력하세요: ');
-    input = parseInt(input, 10);
-    inputValue.push(input);
-    if (isNaN(input) || input < MIN_NUMBER || input > MAX_NUMBER) {
-      console.log(`${MIN_NUMBER}~${MAX_NUMBER} 사이의 숫자를 입력하세요.`);
-      inputValue.pop();
-      continue;
-    }
-    checkGuessNumber(input, randomNumber, inputValue);
-    if (input === randomNumber) {
+    const userInput = await getUserInput();
+    inputValue.push(userInput);
+    checkGuessNumber(userInput, randomNumber, inputValue);
+    if (userInput === randomNumber) {
       console.log(
         `축하합니다! ${inputValue.length}번 만에 숫자를 맞추셨습니다.`
       );
