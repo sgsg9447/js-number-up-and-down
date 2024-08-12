@@ -21,7 +21,9 @@ export async function askToPlayAgain() {
 async function play() {
   const randomNumber = generateRandomNumber();
   console.log(randomNumber);
-  console.log('컴퓨터가 1~50 사이의 숫자를 선택했습니다. 숫자를 맞춰보세요.');
+  console.log(
+    `컴퓨터가 ${MIN_NUMBER}~${MAX_NUMBER} 사이의 숫자를 선택했습니다. 숫자를 맞춰보세요.`
+  );
   const inputValue = [];
   let count;
   for (count = 1; count <= MAX_ATTEMPT; count++) {
@@ -29,7 +31,7 @@ async function play() {
     input = parseInt(input, 10);
     inputValue.push(input);
     if (isNaN(input) || input < MIN_NUMBER || input > MAX_NUMBER) {
-      console.log('1~50 사이의 숫자를 입력하세요.');
+      console.log(`${MIN_NUMBER}~${MAX_NUMBER} 사이의 숫자를 입력하세요.`);
       inputValue.pop();
       continue;
     }
