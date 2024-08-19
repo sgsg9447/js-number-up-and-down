@@ -50,6 +50,10 @@ const askToMinMaxNumber = async () => {
     console.log('숫자 입력이 잘못되었습니다. 다시 입력해주세요.');
     return askToMinMaxNumber();
   }
+  if (minAndMaxNumber.split(',')[1] === '') {
+    console.log('숫자 입력이 잘못되었습니다. 다시 입력해주세요.');
+    return askToMinMaxNumber();
+  }
   if (minAndMaxNumber.split(',').length !== 2) {
     console.log('숫자 입력이 잘못되었습니다. 다시 입력해주세요.');
     return askToMinMaxNumber();
