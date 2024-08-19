@@ -46,6 +46,14 @@ const askToMinMaxNumber = async () => {
     '[게임 설정] 게임 시작을 위해 최소 값, 최대 값을 입력해주세요. (예: 1, 50)'
   );
   const minAndMaxNumber = await readLineAsync('숫자 입력:');
+  if (!minAndMaxNumber.includes(',')) {
+    console.log('숫자 입력이 잘못되었습니다. 다시 입력해주세요.');
+    return askToMinMaxNumber();
+  }
+  if (minAndMaxNumber.split(',').length !== 2) {
+    console.log('숫자 입력이 잘못되었습니다. 다시 입력해주세요.');
+    return askToMinMaxNumber();
+  }
   const [minNumber, maxNumber] = minAndMaxNumber.split(',').map(Number);
   return [minNumber, maxNumber];
 };
