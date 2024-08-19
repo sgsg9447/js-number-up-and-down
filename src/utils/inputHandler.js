@@ -20,8 +20,7 @@ export function readLineAsync(query) {
 }
 
 export async function getUserInput() {
-  let input = await readLineAsync('숫자를 입력하세요: ');
-  input = parseInt(input, 10);
+  const input = parseInt(await readLineAsync('숫자를 입력하세요: '));
   if (isNaN(input) || input < MIN_NUMBER || input > MAX_NUMBER) {
     console.log(`${MIN_NUMBER}~${MAX_NUMBER} 사이의 숫자를 입력하세요.`);
     return getUserInput();
