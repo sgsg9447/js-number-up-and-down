@@ -1,4 +1,3 @@
-import { MAX_NUMBER, MIN_NUMBER, MAX_ATTEMPT } from './constants/numbers.js';
 import { generateRandomNumber, checkGuessNumber } from './utils/numbers.js';
 import { readLineAsync, getUserInput } from './utils/inputHandler.js';
 
@@ -20,13 +19,19 @@ export async function askToPlayAgain() {
   }
 }
 
-async function processGuess(userInput, randomNumber, inputValue, count) {
+async function processGuess(
+  userInput,
+  randomNumber,
+  inputValue,
+  playNumber,
+  count
+) {
   if (userInput === randomNumber) {
     console.log(`축하합니다! ${inputValue.length}번 만에 숫자를 맞추셨습니다.`);
     await askToPlayAgain();
     return true;
   }
-  if (count === MAX_ATTEMPT) {
+  if (count === playNumber) {
     console.log(
       `${count}회 초과! 숫자를 맞추지 못했습니다. (정답: ${randomNumber})`
     );
@@ -36,20 +41,38 @@ async function processGuess(userInput, randomNumber, inputValue, count) {
   return false;
 }
 
-async function play() {
-  const randomNumber = generateRandomNumber();
+const askToMinMaxNumber = async () => {
   console.log(
-    `컴퓨터가 ${MIN_NUMBER}~${MAX_NUMBER} 사이의 숫자를 선택했습니다. 숫자를 맞춰보세요.`
+    '[게임 설정] 게임 시작을 위해 최소 값, 최대 값을 입력해주세요. (예: 1, 50)'
+  );
+  const minAndMaxNumber = await readLineAsync('숫자 입력:');
+  const [minNumber, maxNumber] = minAndMaxNumber.split(',').map(Number);
+  return [minNumber, maxNumber];
+};
+
+const askToPlayNumber = async () => {
+  console.log('[게임 설정] 게임 시작을 위해 진행 가능 횟수를 입력해주세요.');
+  const playNumber = await readLineAsync('숫자 입력:');
+  return Number(playNumber);
+};
+
+async function play() {
+  const [minNumber, maxNumber] = await askToMinMaxNumber();
+  const randomNumber = generateRandomNumber(minNumber, maxNumber);
+  const playNumber = await askToPlayNumber();
+  console.log(
+    `[게임 시작] ${minNumber}~${maxNumber} 사이의 숫자를 선택했습니다. 숫자를 맞춰보세요.`
   );
   const inputValue = [];
-  for (let count = 1; count <= MAX_ATTEMPT; count++) {
-    const userInput = await getUserInput();
+  for (let count = 1; count <= playNumber; count++) {
+    const userInput = await getUserInput(minNumber, maxNumber);
     inputValue.push(userInput);
     checkGuessNumber(userInput, randomNumber, inputValue);
     const gameEnded = await processGuess(
       userInput,
       randomNumber,
       inputValue,
+      playNumber,
       count
     );
     if (gameEnded) {

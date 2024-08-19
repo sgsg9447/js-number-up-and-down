@@ -1,5 +1,4 @@
 import readLine from 'readline';
-import { MIN_NUMBER, MAX_NUMBER } from '../constants/numbers.js';
 
 export function readLineAsync(query) {
   return new Promise((resolve, reject) => {
@@ -19,11 +18,11 @@ export function readLineAsync(query) {
   });
 }
 
-export async function getUserInput() {
+export async function getUserInput(minNumber, maxNumber) {
   const input = parseInt(await readLineAsync('숫자를 입력하세요: '));
-  if (isNaN(input) || input < MIN_NUMBER || input > MAX_NUMBER) {
-    console.log(`${MIN_NUMBER}~${MAX_NUMBER} 사이의 숫자를 입력하세요.`);
-    return getUserInput();
+  if (isNaN(input) || input < minNumber || input > maxNumber) {
+    console.log(`${minNumber}~${maxNumber} 사이의 숫자를 입력하세요.`);
+    return getUserInput(minNumber, maxNumber);
   }
   return input;
 }
