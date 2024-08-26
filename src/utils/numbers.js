@@ -1,8 +1,8 @@
-export function generateRandomNumber(minNumber, maxNumber) {
+export const generateRandomNumber = (minNumber, maxNumber) => {
   return Math.floor(Math.random() * (maxNumber - minNumber) + minNumber);
-}
+};
 
-export function checkGuessNumber(input, randomNumber, inputValue) {
+export const checkGuessNumber = (input, randomNumber, inputValue) => {
   if (input === randomNumber) {
     console.log('정답');
     return '정답';
@@ -17,4 +17,4 @@ export function checkGuessNumber(input, randomNumber, inputValue) {
     console.log(`이전 추측: ${inputValue.join(', ')}`);
     return '업';
   }
-}
+};
