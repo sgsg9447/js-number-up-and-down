@@ -2,21 +2,25 @@ import {
   createGameSetting,
   createGameProcess,
   generateRandomNumber,
-} from './domain/input.js';
+} from './domain/index.js';
 import { readLineAsync } from './utils/inputHandler.js';
-import { getUserInput } from './view/index.js';
+import {
+  askUserInput,
+  displayMinMaxNumber,
+  displayGameEnd,
+  askRestartGame,
+  displayYesOrNo,
+} from './view/index.js';
 
 const play = async () => {
   const gameSettings = createGameSetting();
   const [minNumber, maxNumber] = await gameSettings.askToMinMaxNumber();
   const playNumber = await gameSettings.askToPlayNumber();
   const randomNumber = generateRandomNumber(minNumber, maxNumber);
-  console.log(
-    `[게임 시작] ${minNumber}~${maxNumber} 사이의 숫자를 선택했습니다. 숫자를 맞춰보세요.`
-  );
+  displayMinMaxNumber(minNumber, maxNumber);
   const processGuess = createGameProcess(randomNumber, playNumber);
   for (let count = 1; count <= playNumber; count++) {
-    const userInput = await getUserInput(minNumber, maxNumber);
+    const userInput = await askUserInput(minNumber, maxNumber);
     const gameEnded = await processGuess(userInput);
     if (gameEnded) {
       break;
@@ -26,18 +30,16 @@ const play = async () => {
 
 export const askToPlayAgain = async () => {
   while (true) {
-    const playAgain = await readLineAsync(
-      '게임을 다시 시작하시겠습니까? (yes/no): '
-    );
+    const playAgain = await askRestartGame();
     if (playAgain.toLowerCase() === 'y' || playAgain.toLowerCase() === 'yes') {
       await play();
       break;
     }
     if (playAgain.toLowerCase() === 'n' || playAgain.toLowerCase() === 'no') {
-      console.log('게임을 종료합니다.');
+      displayGameEnd();
       break;
     } else {
-      console.log('yes 또는 no로 입력해주세요.');
+      displayYesOrNo();
     }
   }
 };
