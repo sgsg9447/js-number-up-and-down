@@ -1,6 +1,4 @@
-export const generateRandomNumber = (minNumber, maxNumber) => {
-  return Math.floor(Math.random() * (maxNumber - minNumber) + minNumber);
-};
+import { readLineAsync } from '../utils/inputHandler.js';
 
 export const checkGuessNumber = (input, randomNumber, inputValue) => {
   if (input === randomNumber) {
@@ -17,4 +15,13 @@ export const checkGuessNumber = (input, randomNumber, inputValue) => {
     console.log(`이전 추측: ${inputValue.join(', ')}`);
     return '업';
   }
+};
+
+export const getUserInput = async (minNumber, maxNumber) => {
+  const input = parseInt(await readLineAsync('숫자를 입력하세요: '));
+  if (isNaN(input) || input < minNumber || input > maxNumber) {
+    console.log(`${minNumber}~${maxNumber} 사이의 숫자를 입력하세요.`);
+    return getUserInput(minNumber, maxNumber);
+  }
+  return input;
 };

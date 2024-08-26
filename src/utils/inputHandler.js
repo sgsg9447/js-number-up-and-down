@@ -18,12 +18,3 @@ export const readLineAsync = (...args) => {
     });
   });
 };
-
-export const getUserInput = async (minNumber, maxNumber) => {
-  const input = parseInt(await readLineAsync('숫자를 입력하세요: '));
-  if (isNaN(input) || input < minNumber || input > maxNumber) {
-    console.log(`${minNumber}~${maxNumber} 사이의 숫자를 입력하세요.`);
-    return getUserInput(minNumber, maxNumber);
-  }
-  return input;
-};
