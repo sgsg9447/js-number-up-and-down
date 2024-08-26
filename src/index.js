@@ -2,8 +2,8 @@ import {
   createGameSetting,
   createGameProcess,
   generateRandomNumber,
+  handleGameDecision,
 } from './domain/index.js';
-import { readLineAsync } from './utils/inputHandler.js';
 import {
   askUserInput,
   displayMinMaxNumber,
@@ -28,14 +28,16 @@ const play = async () => {
   }
 };
 
+// TODO 도메인로직으로 분리하기...
 export const askToPlayAgain = async () => {
   while (true) {
     const playAgain = await askRestartGame();
-    if (playAgain.toLowerCase() === 'y' || playAgain.toLowerCase() === 'yes') {
+    const decision = await handleGameDecision(playAgain);
+    if (decision) {
       await play();
       break;
     }
-    if (playAgain.toLowerCase() === 'n' || playAgain.toLowerCase() === 'no') {
+    if (!decision) {
       displayGameEnd();
       break;
     } else {

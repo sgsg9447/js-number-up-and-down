@@ -92,3 +92,13 @@ export const handlePlayAgainYesOrNo = async (playAgainResponse, play) => {
     return null;
   }
 };
+
+export const handleGameDecision = async (playAgainResponse) => {
+  const response = playAgainResponse.toLowerCase();
+  if (response === 'y' || response === 'yes') {
+    return true;
+  }
+  if (response === 'n' || response === 'no') {
+    return false;
+  }
+};
