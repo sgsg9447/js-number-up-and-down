@@ -44,37 +44,53 @@ function createGameProcess(randomNumber, playNumber) {
   };
 }
 
-const askToMinMaxNumber = async () => {
-  console.log(
-    '[게임 설정] 게임 시작을 위해 최소 값, 최대 값을 입력해주세요. (예: 1, 50)'
-  );
-  const minAndMaxNumber = await readLineAsync('숫자 입력:');
-  if (!minAndMaxNumber.includes(',')) {
-    console.log('숫자 입력이 잘못되었습니다. 다시 입력해주세요.');
-    return askToMinMaxNumber();
-  }
-  if (minAndMaxNumber.split(',')[1] === '') {
-    console.log('숫자 입력이 잘못되었습니다. 다시 입력해주세요.');
-    return askToMinMaxNumber();
-  }
-  if (minAndMaxNumber.split(',').length !== 2) {
-    console.log('숫자 입력이 잘못되었습니다. 다시 입력해주세요.');
-    return askToMinMaxNumber();
-  }
-  const [minNumber, maxNumber] = minAndMaxNumber.split(',').map(Number);
-  return [minNumber, maxNumber];
-};
+const createGameSetting = () => {
+  let minNumber = null;
+  let maxNumber = null;
+  let playNumber = null;
 
-const askToPlayNumber = async () => {
-  console.log('[게임 설정] 게임 시작을 위해 진행 가능 횟수를 입력해주세요.');
-  const playNumber = await readLineAsync('숫자 입력:');
-  return Number(playNumber);
+  return {
+    askToMinMaxNumber: async () => {
+      console.log(
+        '[게임 설정] 게임 시작을 위해 최소 값, 최대 값을 입력해주세요. (예: 1, 50)'
+      );
+      const minAndMaxNumber = await readLineAsync('숫자 입력:');
+      if (!minAndMaxNumber.includes(',')) {
+        console.log('숫자 입력이 잘못되었습니다. 다시 입력해주세요.');
+        return askToMinMaxNumber();
+      }
+      if (minAndMaxNumber.split(',')[1] === '') {
+        console.log('숫자 입력이 잘못되었습니다. 다시 입력해주세요.');
+        return askToMinMaxNumber();
+      }
+      if (minAndMaxNumber.split(',').length !== 2) {
+        console.log('숫자 입력이 잘못되었습니다. 다시 입력해주세요.');
+        return askToMinMaxNumber();
+      }
+      [minNumber, maxNumber] = minAndMaxNumber.split(',').map(Number);
+      return [minNumber, maxNumber];
+    },
+    askToPlayNumber: async () => {
+      console.log(
+        '[게임 설정] 게임 시작을 위해 진행 가능 횟수를 입력해주세요.'
+      );
+      playNumber = await readLineAsync('숫자 입력:');
+      return Number(playNumber);
+    },
+
+    getSettings: () => ({
+      minNumber,
+      maxNumber,
+      playNumber,
+    }),
+  };
 };
 
 async function play() {
-  const [minNumber, maxNumber] = await askToMinMaxNumber();
+  const gameSettings = createGameSetting();
+  const [minNumber, maxNumber] = await gameSettings.askToMinMaxNumber();
+  const playNumber = await gameSettings.askToPlayNumber();
   const randomNumber = generateRandomNumber(minNumber, maxNumber);
-  const playNumber = await askToPlayNumber();
   console.log(
     `[게임 시작] ${minNumber}~${maxNumber} 사이의 숫자를 선택했습니다. 숫자를 맞춰보세요.`
   );
