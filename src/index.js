@@ -19,26 +19,29 @@ export async function askToPlayAgain() {
   }
 }
 
-async function processGuess(
-  userInput,
-  randomNumber,
-  inputValue,
-  playNumber,
-  count
-) {
-  if (userInput === randomNumber) {
-    console.log(`축하합니다! ${inputValue.length}번 만에 숫자를 맞추셨습니다.`);
-    await askToPlayAgain();
-    return true;
-  }
-  if (count === playNumber) {
-    console.log(
-      `${count}회 초과! 숫자를 맞추지 못했습니다. (정답: ${randomNumber})`
-    );
-    await askToPlayAgain();
-    return true;
-  }
-  return false;
+function createGameProcess(randomNumber, playNumber) {
+  let count = 0;
+  const inputValue = [];
+  return async function processGuess(userInput) {
+    inputValue.push(userInput);
+    count++;
+    checkGuessNumber(userInput, randomNumber, inputValue);
+    if (userInput === randomNumber) {
+      console.log(
+        `축하합니다! ${inputValue.length}번 만에 숫자를 맞추셨습니다.`
+      );
+      await askToPlayAgain();
+      return true;
+    }
+    if (count === playNumber) {
+      console.log(
+        `${count}회 초과! 숫자를 맞추지 못했습니다. (정답: ${randomNumber})`
+      );
+      await askToPlayAgain();
+      return true;
+    }
+    return false;
+  };
 }
 
 const askToMinMaxNumber = async () => {
@@ -75,18 +78,10 @@ async function play() {
   console.log(
     `[게임 시작] ${minNumber}~${maxNumber} 사이의 숫자를 선택했습니다. 숫자를 맞춰보세요.`
   );
-  const inputValue = [];
+  const processGuess = createGameProcess(randomNumber, playNumber);
   for (let count = 1; count <= playNumber; count++) {
     const userInput = await getUserInput(minNumber, maxNumber);
-    inputValue.push(userInput);
-    checkGuessNumber(userInput, randomNumber, inputValue);
-    const gameEnded = await processGuess(
-      userInput,
-      randomNumber,
-      inputValue,
-      playNumber,
-      count
-    );
+    const gameEnded = await processGuess(userInput);
     if (gameEnded) {
       break;
     }
