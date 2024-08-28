@@ -1,10 +1,11 @@
 import readLine from 'readline';
 
-export function readLineAsync(query) {
+export const readLineAsync = (...args) => {
   return new Promise((resolve, reject) => {
-    if (arguments.length !== 1) {
+    if (args.length !== 1) {
       reject(new Error('argumnets must be 1'));
     }
+    const [query] = args;
     if (typeof query !== 'string') {
       reject(new Error('query must be string'));
     }
@@ -16,13 +17,4 @@ export function readLineAsync(query) {
       resolve(input);
     });
   });
-}
-
-export async function getUserInput(minNumber, maxNumber) {
-  const input = parseInt(await readLineAsync('숫자를 입력하세요: '));
-  if (isNaN(input) || input < minNumber || input > maxNumber) {
-    console.log(`${minNumber}~${maxNumber} 사이의 숫자를 입력하세요.`);
-    return getUserInput(minNumber, maxNumber);
-  }
-  return input;
-}
+};
